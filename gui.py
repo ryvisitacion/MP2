@@ -1,5 +1,7 @@
 import pyglet
 import gametime
+pyglet.resource.path = ['assets']
+pyglet.resource.reindex()
 
 #please remember that 0,0 is in the lower left for pyglet
 
@@ -31,9 +33,44 @@ time.week, time.month, time.year)
 	
 pyglet.clock.schedule_interval(update, 2)	
 
+class Button:
+	def __init__(self, neutral, x, y):
+		self.x = x
+		self.y = y
+		self.name = neutral
+		self.neutral_image = pyglet.resource.image(neutral + '.png')
+		self.pressed_image = pyglet.resource.image(neutral + 'P' + '.png')
+		self.button_sprite = pyglet.sprite.Sprite(self.neutral_image, self.x, self.y)
+		self.width = self.neutral_image.width
+		self.height = self.neutral_image.height
+	
+	def drawButton(self):
+		self.button_sprite.draw()
+	
+	def pressed(self):
+		self.button_sprite.image = self.pressed_image
+		self.button_sprite.draw()
+		print('{} button pressed'.format(self.name))
+	
+	def revert(self):
+		self.button_sprite.image = self.neutral_image
+		self.button_sprite.draw()
+		print('{} button released'.format(self.name))
+
+buyBitcoinButton = Button("buyBitcoin", window.width // 2, window.height // 2)		
+
+@window.event
+def on_mouse_press(x, y, button, modifiers):
+	if buyBitcoinButton.x <= x <= buyBitcoinButton.x + buyBitcoinButton.width and buyBitcoinButton.y <= y <= buyBitcoinButton.y + buyBitcoinButton.height:
+		buyBitcoinButton.pressed()
+@window.event
+def on_mouse_release(x, y, button, modifiers):
+	if buyBitcoinButton.x <= x <= buyBitcoinButton.x + buyBitcoinButton.width and buyBitcoinButton.y <= y <= buyBitcoinButton.y + buyBitcoinButton.height:
+		buyBitcoinButton.revert()
+		
 @window.event
 def on_draw():
 	window.clear()
-	timedisplay.draw()
+	buyBitcoinButton.drawButton()
 	
 pyglet.app.run()
