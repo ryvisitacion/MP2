@@ -11,12 +11,12 @@ class Button:
 	def __init__(x, y, width, height, label):
 '''
 time = gametime.gameTimeData(1, 1, 1, 1)
-timelabel = "Day: {}\n Week: {}\n Month: {}\n Year: {}".format(time.day, 
+timeLabel = "Day: {}\n Week: {}\n Month: {}\n Year: {}".format(time.day, 
 time.week, time.month, time.year)
 
 window = pyglet.window.Window(width = 1200, height = 900)	
-timedisplay = pyglet.text.Label(
-timelabel,
+timeDisplay = pyglet.text.Label(
+timeLabel,
 font_name = 'Times New Roman',
 font_size = 36,
 x = window.width // 2,
@@ -27,19 +27,19 @@ anchor_y = 'center'
 
 def update(dt):
 	time.addDay()
-	timelabel = "Day: {}\n Week: {}\n Month: {}\n Year: {}".format(time.day, 
+	timeLabel = "Day: {}\n Week: {}\n Month: {}\n Year: {}".format(time.day, 
 time.week, time.month, time.year)
-	timedisplay.text = timelabel
+	timeDisplay.text = timeLabel
 	
 pyglet.clock.schedule_interval(update, 2)	
 
 class Button:
-	def __init__(self, neutral, x, y):
+	def __init__(self, name, x, y):
 		self.x = x
 		self.y = y
-		self.name = neutral
-		self.neutral_image = pyglet.resource.image(neutral + '.png')
-		self.pressed_image = pyglet.resource.image(neutral + 'P' + '.png')
+		self.name = name
+		self.neutral_image = pyglet.resource.image(self.name + '.png')
+		self.pressed_image = pyglet.resource.image(self.name + 'P' + '.png')
 		self.button_sprite = pyglet.sprite.Sprite(self.neutral_image, self.x, self.y)
 		self.width = self.neutral_image.width
 		self.height = self.neutral_image.height
@@ -52,21 +52,30 @@ class Button:
 		self.button_sprite.draw()
 		print('{} button pressed'.format(self.name))
 	
-	def revert(self):
+	def unpressed(self):
 		self.button_sprite.image = self.neutral_image
 		self.button_sprite.draw()
 		print('{} button released'.format(self.name))
+	
+	def cursorOnButton(self, mouseX, mouseY):
+		if self.x <= mouseX <= self.x + self.width and self.y <= mouseY <= self.y + self.height:
+			return True
+		return False
 
 buyBitcoinButton = Button("buyBitcoin", window.width // 2, window.height // 2)		
 
+buttonList = [buyBitcoinButton]
+
 @window.event
 def on_mouse_press(x, y, button, modifiers):
-	if buyBitcoinButton.x <= x <= buyBitcoinButton.x + buyBitcoinButton.width and buyBitcoinButton.y <= y <= buyBitcoinButton.y + buyBitcoinButton.height:
-		buyBitcoinButton.pressed()
+	for button in buttonList:
+		if button.cursorOnButton(x, y):
+			button.pressed()
 @window.event
 def on_mouse_release(x, y, button, modifiers):
-	if buyBitcoinButton.x <= x <= buyBitcoinButton.x + buyBitcoinButton.width and buyBitcoinButton.y <= y <= buyBitcoinButton.y + buyBitcoinButton.height:
-		buyBitcoinButton.revert()
+	for button in buttonList:
+		if button.cursorOnButton(x, y):
+			button.unpressed()
 		
 @window.event
 def on_draw():
