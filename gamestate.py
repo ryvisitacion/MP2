@@ -25,7 +25,7 @@ self.collectorCount, self.databaseCount, self.laundromatCount]
 		
 	def cashInData(self):
 		if self.dataFileCount < 10:
-			return
+			return False
 		self.dataFileCount -= 10
 		n = 0
 		success_chance = round(random.uniform(0.45, 0.55)) + database_modifier
@@ -34,27 +34,32 @@ self.collectorCount, self.databaseCount, self.laundromatCount]
 			if c <= success_chance:
 				n += 2500
 		self.cashCount += n
+		return True
 	
 	def hireCollector(self):
 		if self.cashCount < 100:
-			return
+			return False
 		self.collectorCount += 1
 		self.cashCount -= 100
+		return True
 	
 	def hireLaudromat(self):
 		if self.cashCount < 50:
-			return
+			return False
 		self.cashCount -= 50
 		self.laundromatCount += 1
+		return True
 	
 	def buyBitcoin(self):
 		if self.cashCount < 5000:
-			return
+			return False
 		self.cashCount -= 5000
 		self.bitcoinCount += 1
+		return True
 	
 	def sellBitcoin(self):
 		if bitcoinCount < 1:
-			return
+			return False
 		self.bitcoinCount -= 1
 		self.cashCount += 5000
+		return True
