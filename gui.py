@@ -21,6 +21,12 @@ anchor_x = 'center',
 anchor_y = 'center'
 )	
 
+title_label = pyglet.text.Label('DROP',
+		font_name ='Times New Roman',
+		font_size = 36,
+		x = window.width//4, y = window.height,
+		anchor_x ='center', anchor_y = 'top')
+
 def update(dt):
 	time.addDay()
 	timeLabel = "Day: {}\n Week: {}\n Month: {}\n Year: {}".format(time.day, 
@@ -72,9 +78,17 @@ class Button:
 			return True
 		return False
 
-buyBitcoinButton = Button("buyBitcoin", window.width // 2, window.height // 2)		
+x_button = window.width//8
+y_button = window.height - 55
 
-buttonList = [buyBitcoinButton]
+collectDataButton = Button("collectData", x_button, y_button)
+cashInDataButton = Button("cashInData", x_button, y_button-55)
+hireCollectorButton = Button("hireCollector", x_button, y_button-110)
+hireLaundromatButton = Button("hireLaundromat", x_button, y_button-165)
+buyBitcoinButton = Button("buyBitcoin", x_button, y_button-220)
+sellBitcoinButton = Button("sellBitcoin", x_button, y_button-275)
+
+buttonList = [collectDataButton, cashInDataButton, hireCollectorButton, hireLaundromatButton, buyBitcoinButton, sellBitcoinButton]
 
 @window.event
 def on_mouse_press(x, y, button, modifiers):
@@ -98,6 +112,18 @@ def on_mouse_motion(x, y, dx, dy):
 @window.event
 def on_draw():
 	window.clear()
-	buyBitcoinButton.drawButton()
+	title_label.draw()
+	collectDataButton.drawButton()
+	for button in buttonList[1:]:
+		if gamestate.cashInData():
+			cashInDataButton.drawButton()
+		if gamestate.hireCollector():
+			hireCollectorButton.drawButton()
+		if gamestate.hireLaundromat():
+			hireLaundromatButton.drawButton()
+		if gamestate.buyBitcoin():
+			buyBitcoinButton,drawButton()
+		if gamestate.sellBitcoin():
+			sellBitcoinButton.drawButton()
 	
 pyglet.app.run()
