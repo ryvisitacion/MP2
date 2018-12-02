@@ -59,7 +59,7 @@ def mainMenuScreen():
 		x = window.width//2, y = 9 * window.height//10,
 		anchor_x ='center', anchor_y = 'top')
 
-	mainMenuStr = ['newGame', 'newGameP', 'exitGame', 'exitGameP']
+	mainMenuStr = ['newGame', 'newGameP', 'highScore', 'highScoreP', 'exitGame', 'exitGameP']
 	mainMenuButtons = []
 
 	for strings in mainMenuStr:
@@ -104,16 +104,13 @@ def mainMenuScreen():
 		for i in range(0, len(mainMenuButtons), 2):
 			if cursorCheckMenu(x, y, i):
 				mainMenuButtons[i].draw()
-				#if i == 0:
-					#load previous game
+				if i == 0:
+					import gui
 				#if i == 2:
-					#start new game
+					#display high scores
 				if i == 4:
 					exit()
 
+mainMenuScreen()
 
-
-#gameOverScreen()
-
-
-#pyglet.app.run()
+pyglet.app.run()
