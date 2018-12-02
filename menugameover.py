@@ -105,6 +105,7 @@ def mainMenuScreen():
 			if cursorCheckMenu(x, y, i):
 				mainMenuButtons[i].draw()
 				if i == 0:
+					window.close()
 					import gui
 				#if i == 2:
 					#display high scores
