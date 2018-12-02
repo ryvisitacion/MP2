@@ -1,6 +1,7 @@
 import pyglet
 import gametime
 import gamestate
+import menugameover
 pyglet.resource.path = ['assets']
 pyglet.resource.reindex()
 
@@ -50,11 +51,19 @@ bitcoinCountLabel = pyglet.text.Label(
 	x = window.width - window.width // 2.5,
 	y = window.height - 135 - 220)
 
+arrestChanceLabel = pyglet.text.Label(
+	"Arrest Risk: {}%".format(round(currentGame.arrestChance * 100), 4),
+	font_name = 'Arial',
+	font_size = 20,
+	x = window.width - window.width // 2.5,
+	y = window.height - 135 - 275)
+
 def labelUpdate():
 	dataFileCountLabel.text = "Data Files: {}".format(currentGame.dataFileCount)
 	cashCountLabel.text = "Cash: {}".format(currentGame.cashCount)
 	collectorCountLabel.text = "Collection Rate: {} data files per day".format(currentGame.collectorCount)
 	bitcoinCountLabel.text = "Bitcoins: {} BTC".format(currentGame.bitcoinCount)
+	arrestChanceLabel.text = "Arrest Risk: {}%".format(currentGame.arrestChance * 100)
 
 def update(dt):
 	time.addDay()
@@ -63,6 +72,10 @@ time.week, time.month, time.year)
 	timeDisplay.text = timeLabel
 	currentGame.update()
 	labelUpdate()
+	if currentGame.arrestChance > 1:
+		menugameover.gameOverScreen()
+		pyglet.clock.unschedule(update)
+		window.close()
 	
 pyglet.clock.schedule_interval(update, 1)	
 
@@ -101,9 +114,8 @@ class Button:
 		pass
 	
 	def unhovered(self):
-		"""
 		self.button_sprite.image = self.neutral_image
-		self.button_sprite.draw()"""
+		self.button_sprite.draw()
 		pass
 	
 	def cursorOnButton(self, mouseX, mouseY):
@@ -156,6 +168,7 @@ def on_draw():
 	timeDisplay.draw()
 	collectDataButton.drawButton()
 	dataFileCountLabel.draw()
+	arrestChanceLabel.draw()
 	for button in buttonList[1:]:
 		if currentGame.cashInDataVisible:
 			cashInDataButton.drawButton()

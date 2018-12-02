@@ -7,6 +7,7 @@ class GameState:
 		self.dataFileCount = int()
 		self.cumulativeDataFileCount = int()
 		self.cashCount = int()
+		self.cumulativeCashCount = int()
 		self.bitcoinCount = int()
 		self.collectorCount = int()
 		self.databaseCount = int()
@@ -18,6 +19,7 @@ self.collectorCount, self.databaseCount, self.laundromatCount]
 		self.hireLaundromatVisible = False
 		self.buyBitcoinVisible = False
 		self.sellBitcoinVisible = False
+		self.arrestChance = 0
 
 	def checkVisiblity(self):
 		if self.dataFileCount >= 10:
@@ -57,6 +59,7 @@ self.collectorCount, self.databaseCount, self.laundromatCount]
 			if c <= success_chance:
 				n += 250
 		self.cashCount += n
+		self.cumulativeCashCount += n
 		self.checkVisiblity()
 		print("cashCount: {}".format(self.cashCount))
 	
@@ -89,4 +92,14 @@ self.collectorCount, self.databaseCount, self.laundromatCount]
 		self.dataFileCount += (1 * self.collectorCount)
 		self.cumulativeDataFileCount += (1 * self.collectorCount)
 		if self.collectorCount > 0:
-			self.cashCount -= (8 * self.collectorCount)
+				self.cashCount -= (10 * self.collectorCount)
+		if self.cumulativeDataFileCount > 100:
+			if self.cashCount > 3000 or self.cashCount < 0:
+				if self.cashCount > 0:
+					self.arrestChance = (0.1 * ((self.cashCount - 3000) // 1000)) - (self.laundromatCount * 0.05)
+				if self.cashCount < 0:
+					self.arrestChance = (0.2 * (self.cashCount // -100)) - (self.laundromatCount * 0.05)
+
+	def calcScore(self):
+		score = self.cumulativeCashCount + self.cumulativeDataFileCount
+		return score
